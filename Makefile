@@ -3,7 +3,7 @@ CFLAGS=-ffreestanding -O2 -Wall -Wextra -nostdlib -std=gnu99
 OUTPUT=kern.bin
 LDFLAGS=-T link.ld -o $(OUTPUT) -ffreestanding -O2 -nostdlib -lgcc
 
-all: build iso clear
+all: build iso clean
 build:
 	nasm src/entry.asm -o entry.o -f elf
 	nasm src/header.asm -o header.o -f elf
@@ -18,7 +18,7 @@ run:
 	qemu-system-x86_64 -kernel kern.bin -d int -no-reboot
 run-iso:
 	qemu-system-x86_64 -cdrom os.iso
-clear:
+clean:
 	rm *.o
 iso:
 	mkdir iso
