@@ -25,12 +25,12 @@ void kmain(){
 	idt_reg_handler(0x1, 0x8e, &debug_int);
 	asm volatile("sti");
 
-	printf("CockOS Kernel v.1.0\n\r");
+	printf("AshlikOS Kernel v.1.0\n\r");
 
 	printf("Initializing serial...");
 
 	serial_init();
-	serial_print("CockOS Kernel v.1.0.0 COM1\n\r");
+	serial_print("AshlikOS Kernel v.1.0 COM1\n\r");
 
 	printf("OK\n\r");
 

@@ -25,7 +25,7 @@ iso:
 	mkdir iso/boot
 	mkdir iso/boot/grub
 	cp kern.bin iso/boot/kern.bin
-	echo 'menuentry "cockos" {' >> iso/boot/grub/grub.cfg
+	echo 'menuentry "AshlikOS" {' >> iso/boot/grub/grub.cfg
 	echo '	multiboot /boot/kern.bin' >> iso/boot/grub/grub.cfg
 	echo '}' >> iso/boot/grub/grub.cfg
 	grub-mkrescue --output os.iso iso
