@@ -8,11 +8,11 @@ build:
 	nasm src/entry.asm -o entry.o -f elf
 	nasm src/header.asm -o header.o -f elf
 	$(CC) $(CFLAGS) -c src/main.c -o main.o
-	$(CC) $(CFLAGS) -c incl/io.c -o io.o
-	$(CC) $(CFLAGS) -c incl/vga.c -o vga.o
-	$(CC) $(CFLAGS) -c incl/interrupts.c -o interrupts.o
-	$(CC) $(CFLAGS) -c incl/gdt.c -o gdt.o
-	$(CC) $(CFLAGS) -c incl/serial.c -o serial.o
+	$(CC) $(CFLAGS) -c src/drivers/io.c -o io.o
+	$(CC) $(CFLAGS) -c src/drivers/vga.c -o vga.o
+	$(CC) $(CFLAGS) -c src/drivers/interrupts.c -o interrupts.o
+	$(CC) $(CFLAGS) -c src/drivers/gdt.c -o gdt.o
+	$(CC) $(CFLAGS) -c src/drivers/serial.c -o serial.o
 	$(CC) $(LDFLAGS) header.o entry.o io.o vga.o interrupts.o gdt.o serial.o main.o
 run:
 	qemu-system-x86_64 -kernel kern.bin -d int -no-reboot
