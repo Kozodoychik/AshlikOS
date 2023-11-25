@@ -16,7 +16,8 @@ build:
 	$(CC) $(CFLAGS) -c src/drivers/gdt.c -o gdt.o
 	$(CC) $(CFLAGS) -c src/drivers/serial.c -o serial.o
 	$(CC) $(CFLAGS) -c src/drivers/keyboard.c -o keyboard.o
-	$(CC) $(LDFLAGS) header.o entry.o io.o vga.o interrupts.o isr.o loadgdt.o gdt.o serial.o keyboard.o main.o
+	$(CC) $(CFLAGS) -c src/drivers/pci.c -o pci.o
+	$(CC) $(LDFLAGS) header.o entry.o io.o vga.o interrupts.o isr.o loadgdt.o gdt.o serial.o keyboard.o pci.o main.o
 run:
 	qemu-system-x86_64 -kernel kern.bin -d int -no-reboot
 run-iso:

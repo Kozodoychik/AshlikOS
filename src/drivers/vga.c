@@ -11,6 +11,7 @@ void clean_convert_buffer(){
 	for (uint8_t i=0; i<9; i++){
 		convert_buffer[i] = 0;
 	}
+	convert_buffer[0] = '0';
 
 }
 
