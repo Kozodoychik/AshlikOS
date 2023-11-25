@@ -112,6 +112,7 @@ void printf(char* str, ...){
 		}
 		else if (str[i] == '%' && str[i+1] == 'X'){
 			//printf(strcat("0x", tohexstring(va_arg(args, int))));
+			printf("0x");
 			printf(tohexstring(va_arg(args, int)));
 			pos_x = (uint8_t)((get_cursor_pos()) % 80);
 			pos_y = (uint8_t)((get_cursor_pos()) / 80);

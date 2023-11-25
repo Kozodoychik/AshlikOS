@@ -35,7 +35,7 @@ void kmain(){
 
 	printf("OK\n\r");
 
-	//printf("%X, %X, %X, %X\n\r", 0x20, 0x1234, 0x21, 0x55AAFF);
+	printf("%X, %X, %X, %X\n\r", 0x20, 0x1234, 0x21, 0x55AAFF);
 
 	while(1);
 
