@@ -2,8 +2,8 @@
 #include "../../incl/gdt.h"
 
 gdt_entry gdt[3];
-gdtr gdt_desc;
-
+gdtr gdt_ptr;
+extern void load_gdt();
 void gdt_setup(){
 	gdt[0].limit_low = 0;
 	gdt[0].base_low = 0;
@@ -26,8 +26,9 @@ void gdt_setup(){
 	gdt[2].base_middle = 0;
 	gdt[2].base_high = 0;
 
-	gdt_desc.limit = sizeof(gdt) - 1;
-	gdt_desc.ptr = gdt;
+	gdt_ptr.limit = sizeof(gdt) - 1;
+	gdt_ptr.ptr = gdt;
 	asm volatile("cli");
-	asm volatile("lgdt %0" : : "m" (gdt_desc));
+	load_gdt();
+	//asm volatile("lgdt %0" : : "m" (gdt_ptr));
 }

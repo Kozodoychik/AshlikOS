@@ -25,4 +25,4 @@ typedef struct  {
 void idt_setup();
 void idt_reg_handler(uint8_t, uint8_t, void*);
 void pic_init();
-
+void pic_eoi();

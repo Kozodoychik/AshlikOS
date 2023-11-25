@@ -4,6 +4,15 @@
 
 struct vga_char* videomem = (struct vga_char*)0xb8000;
 uint8_t attrib = 0x07;
+char convert_buffer[9] = {};
+
+void clean_convert_buffer(){
+
+	for (uint8_t i=0; i<9; i++){
+		convert_buffer[i] = 0;
+	}
+
+}
 
 void set_attrib(uint8_t attr){
 
@@ -35,8 +44,9 @@ void set_cursor_pos(uint8_t x, uint8_t y){
 }
 
 char* tohexstring(int hex){
-	char* result = (char*)0x500;
-	char temp[sizeof(int)] = {};
+	clean_convert_buffer();
+	char* result = convert_buffer;
+	char temp[sizeof(int)*2] = {};
 	char hex_table[16] = "0123456789ABCDEF";
 	uint8_t offset = 0;
 	while (hex > 0){
@@ -52,7 +62,8 @@ char* tohexstring(int hex){
 }
 
 char* todecstring(int num){
-	char* result = (char*)0x600;
+	clean_convert_buffer();
+	char* result = convert_buffer;
 	char temp[sizeof(int)] = {};
 	char dec_table[10] = "0123456789";
 	uint8_t offset = 0;
@@ -84,28 +95,40 @@ void printf(char* str, ...){
 	uint8_t pos_y = (uint8_t)((get_cursor_pos()) / 80);
 
 	va_list args;
-	va_start(args, str); 
+	va_start(args, str);
 
 	uint8_t i=0;
 	while (str[i] != '\0'){
+		if (pos_y == 24){
+			scroll();
+			pos_y = 23;
+			set_cursor_pos(pos_x, pos_y);
+		}
 		if (str[i] == '\n'){
-			if (pos_y == 24){
-				scroll();
-			}else{
-				pos_y++;
-			}
+			pos_y++;
 		}
 		else if (str[i] == '\r'){
 			pos_x = 0;
 		}
 		else if (str[i] == '%' && str[i+1] == 'X'){
+			//printf(strcat("0x", tohexstring(va_arg(args, int))));
 			printf(tohexstring(va_arg(args, int)));
-			pos_x += 2;
+			pos_x = (uint8_t)((get_cursor_pos()) % 80);
+			pos_y = (uint8_t)((get_cursor_pos()) / 80);
 			i++;
 		}
 		else if (str[i] == '%' && str[i+1] == 'd'){
 			printf(todecstring(va_arg(args, int)));
-			pos_x += 2;
+			pos_x = (uint8_t)((get_cursor_pos()) % 80);
+			pos_y = (uint8_t)((get_cursor_pos()) / 80);
+			i++;
+		}
+		else if (str[i] == '%' && str[i+1] == 'c'){
+			char c = (char)va_arg(args, int);
+			uint16_t offset = get_cursor_pos();
+			videomem[offset].c = c;
+			videomem[offset].attrib = attrib;
+			pos_x++;
 			i++;
 		}
 		else{

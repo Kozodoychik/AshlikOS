@@ -3,16 +3,9 @@
 #include "../incl/string.h"
 #include "../incl/interrupts.h"
 #include "../incl/gdt.h"
+#include "../incl/io.h"
 #include "../incl/serial.h"
-
-void debug_int(){
-
-	asm volatile("cli");
-	printf("!!!DEBUG INTERRUPT!!!\n\r");
-	asm volatile("hlt");
-	while(1){};
-
-}
+#include "../incl/keyboard.h"
 
 void kmain(){
 
@@ -20,12 +13,20 @@ void kmain(){
 
 	gdt_setup();
 
+	printf("AshlikOS Kernel v.1.0\n\r");
+
 	asm volatile("cli");
+	pic_init();
 	idt_setup();
-	idt_reg_handler(0x1, 0x8e, &debug_int);
+
+	printf("Initializing keyboard...");
+
+	keyboard_init();
+
+	printf("OK\n\r");
+
 	asm volatile("sti");
 
-	printf("AshlikOS Kernel v.1.0\n\r");
 
 	printf("Initializing serial...");
 
@@ -34,7 +35,10 @@ void kmain(){
 
 	printf("OK\n\r");
 
-	//asm volatile("int $1");
+	//printf("%X, %X, %X, %X\n\r", 0x20, 0x1234, 0x21, 0x55AAFF);
+
+	while(1);
+
 	return;
 
 }
