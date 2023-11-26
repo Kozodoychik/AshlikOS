@@ -43,7 +43,7 @@ void kmain(){
 				pci_device_desc d = pci_get_device_descriptor(bus, device, func);
 				if (d.vendor_id == 0 || d.vendor_id == 0xffff)
 					break;
-				printf("PCI: bus=%X  device=%X  function=%X  vendor=%X  device=%X\n\r", bus, device, func,
+				printf("PCI: bus=%X  device=%X  function=%X  vendor_id=%X  device_id=%X\n\r", bus, device, func,
 					d.vendor_id, d.device_id);
 			}
 		}

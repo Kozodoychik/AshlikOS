@@ -1,6 +1,7 @@
 #include "../../incl/pci.h"
 #include "../../incl/io.h"
 #include "../../incl/types.h"
+#include "../../incl/vga.h"
 
 uint32_t get_id(uint16_t bus, uint16_t device, uint16_t function, uint32_t reg){
 
@@ -13,7 +14,7 @@ uint32_t pci_read(uint16_t bus, uint16_t device, uint16_t function, uint32_t reg
 	uint32_t id = get_id(bus, device, function, reg);
 	outl(PCI_COMMAND, id);
 	uint32_t result = inl(PCI_DATA);
-	return result;
+	return result >> (8 * (reg % 4));
 
 }
 
