@@ -1,12 +1,12 @@
 #include <stdint.h>
-#include "../incl/vga.h"
 #include "../incl/string.h"
 #include "../incl/interrupts.h"
 #include "../incl/gdt.h"
-#include "../incl/io.h"
-#include "../incl/serial.h"
-#include "../incl/keyboard.h"
-#include "../incl/pci.h"
+#include "../incl/drivers/vga.h"
+#include "../incl/drivers/io.h"
+#include "../incl/drivers/serial.h"
+#include "../incl/drivers/keyboard.h"
+#include "../incl/drivers/pci.h"
 
 void kmain(){
 

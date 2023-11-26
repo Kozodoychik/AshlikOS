@@ -1,7 +1,7 @@
 #include <stdint.h>
-#include "../../incl/interrupts.h"
-#include "../../incl/io.h"
-#include "../../incl/vga.h"
+#include "../incl/interrupts.h"
+#include "../incl/drivers/io.h"
+#include "../incl/drivers/vga.h"
 
 idt_entry idt[256];
 idt_ptr idt_p;

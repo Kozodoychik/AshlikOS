@@ -1,7 +1,7 @@
 #include "../../incl/interrupts.h"
-#include "../../incl/io.h"
-#include "../../incl/keyboard.h"
-#include "../../incl/vga.h"
+#include "../../incl/drivers/io.h"
+#include "../../incl/drivers/keyboard.h"
+#include "../../incl/drivers/vga.h"
 
 const char* scan_code_set1 = "  1234567890-=  qwertyuiop[]  asdfghjkl;'` \\zxcvbnm,./ *               789-456+1230.";
 

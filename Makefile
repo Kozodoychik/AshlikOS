@@ -7,13 +7,13 @@ all: build iso clean
 build:
 	nasm src/entry.asm -o entry.o -f elf
 	nasm src/header.asm -o header.o -f elf
-	nasm src/drivers/interrupts.asm -o isr.o -f elf
-	nasm src/drivers/gdt.asm -o loadgdt.o -f elf
+	nasm src/interrupts.asm -o isr.o -f elf
+	nasm src/gdt.asm -o loadgdt.o -f elf
 	$(CC) $(CFLAGS) -c src/main.c -o main.o
+	$(CC) $(CFLAGS) -c src/interrupts.c -o interrupts.o
+	$(CC) $(CFLAGS) -c src/gdt.c -o gdt.o
 	$(CC) $(CFLAGS) -c src/drivers/io.c -o io.o
 	$(CC) $(CFLAGS) -c src/drivers/vga.c -o vga.o
-	$(CC) $(CFLAGS) -c src/drivers/interrupts.c -o interrupts.o
-	$(CC) $(CFLAGS) -c src/drivers/gdt.c -o gdt.o
 	$(CC) $(CFLAGS) -c src/drivers/serial.c -o serial.o
 	$(CC) $(CFLAGS) -c src/drivers/keyboard.c -o keyboard.o
 	$(CC) $(CFLAGS) -c src/drivers/pci.c -o pci.o

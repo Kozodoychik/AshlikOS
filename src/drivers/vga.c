@@ -1,5 +1,5 @@
-#include "../../incl/vga.h"
-#include "../../incl/io.h"
+#include "../../incl/drivers/vga.h"
+#include "../../incl/drivers/io.h"
 #include <stdarg.h>
 
 struct vga_char* videomem = (struct vga_char*)0xb8000;

@@ -1,5 +1,5 @@
-#include "../../incl/serial.h"
-#include "../../incl/io.h"
+#include "../../incl/drivers/serial.h"
+#include "../../incl/drivers/io.h"
 
 void serial_init(){
 
