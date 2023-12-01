@@ -7,6 +7,7 @@
 #include "../incl/drivers/serial.h"
 #include "../incl/drivers/keyboard.h"
 #include "../incl/drivers/pci.h"
+#include "../incl/drivers/atapi.h"
 
 void kmain(){
 
@@ -42,13 +43,23 @@ void kmain(){
 			for (int func=0;func<funcs;func++){
 				pci_device_desc d = pci_get_device_descriptor(bus, device, func);
 				if (d.vendor_id == 0 || d.vendor_id == 0xffff)
-					break;
+					continue;
 				printf("PCI: bus=%X  device=%X  function=%X  vendor_id=%X  device_id=%X\n\r", bus, device, func,
 					d.vendor_id, d.device_id);
 			}
 		}
 	}
-	//printf("%X, %X, %X, %X\n\r", 0x20, 0x1234, 0x21, 0x55AAFF);
+
+	uint16_t atapi_base = atapi_detect();
+
+	if (atapi_base != 1) {
+		printf("ATAPI I/O port base: %X\n\r", atapi_base);
+		int status = atapi_read(0x10, 1, (uint16_t*)0x500000);
+		if (status==1) printf("atapi_read error\n\r");
+		else {
+			printf((char*)0x500000);
+		}
+	}
 
 	while(1);
 
