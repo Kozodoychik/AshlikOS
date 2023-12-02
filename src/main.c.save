@@ -1,0 +1,104 @@
+#include <stdint.h>
+#include "../incl/string.h"
+#include "../incl/interrupts.h"
+#include "../incl/gdt.h"
+#include "../incl/drivers/vga.h"
+#include "../incl/drivers/io.h"
+#include "../incl/drivers/serial.h"
+#include "../incl/drivers/keyboard.h"
+#include "../incl/drivers/pci.h"
+#include "../incl/drivers/atapi.h"
+#include "../incl/fs/iso9660.h"
+
+void kmain(){
+
+	vga_90x30_text_mode_init();
+	cls();
+	printf("90x30 Text mode\n\r");
+
+	gdt_setup();
+
+	printf("AshlikOS Kernel v.1.0\n\r");
+
+	asm volatile("cli");
+	pic_init();
+	idt_setup();
+
+	printf("Initializing keyboard...");
+
+	keyboard_init();
+
+	printf("OK\n\r");
+
+	asm volatile("sti");
+
+
+	printf("Initializing serial...");
+
+	serial_init();
+	serial_print("AshlikOS Kernel v.1.0 COM1\n\r");
+
+	printf("OK\n\r");
+
+	for (int bus=0;bus<8;bus++){
+		for (int device=0;device<32;device++){
+			int funcs = pci_device_has_funcs(bus, device) ? 8 : 1;
+			for (int func=0;func<funcs;func++){
+				pci_device_desc d = pci_get_device_descriptor(bus, device, func);
+				if (d.vendor_id == 0 || d.vendor_id == 0xffff)
+					continue;
+				printf("PCI: bus=%X  device=%X  function=%X  vendor_id=%X  device_id=%X\n\r", bus, device, func,
+					d.vendor_id, d.device_id);
+			}
+		}
+	}
+
+	uint16_t atapi_base = atapi_detect();
+
+	if (atapi_base != 1) {
+		printf("ATAPI I/O port base: %X\n\r", atapi_base);
+
+		int status = atapi_read(0x10, 1, (uint16_t*)0x500000);
+
+		if (status==1) printf("atapi_read error\n\r");
+		else {
+
+			iso9660_primary_volume_descriptor* d = (iso9660_primary_volume_descriptor*)0x500000; // в PVD хранитс€ запись о корневом каталоге
+
+			uint32_t lba = d->root_directory_entry.lba_lsb; // lsb это little-endian, msb не берЄм ибо мы работаем на x86
+			// Ќасколько € пон€л, размер в таблице хранитс€ в байтах, когда мне нужен размер в секторах
+			int status = atapi_read(lba, (d->root_directory_entry.length/2048)+1, (uint16_t*)0x510000); // читаем корневой каталог
+
+			if (status == 1) printf("atapi_read error");
+			else {
+
+				iso9660_directory_entry* file = (iso9660_directory_entry*)0x510000;
+
+				while (file->length != 0){ // ищем нужный файл по всей таблице
+
+					uint8_t len = file->length;
+
+					if (strcmp(file->file_id, "test.txt;1") == 0){
+						break; // уро, мы нашли файл!!!!!!!!!!!!!!
+					}
+
+					file = (uint32_t)file+len;
+
+				}
+
+				if (file->length == 0) printf("File test.txt not found\n\r");
+				else {
+					lba = file->lba_lsb;
+					status = atapi_read(lba, (file->data_length_lsb/2048)+1, (uint16_t*)0x520000); // загружаем файл
+					printf((char*)0x520000); // Sova
+				}
+
+			}
+		}
+	}
+
+	while(1);
+
+	return;
+
+}

@@ -8,10 +8,15 @@
 #include "../incl/drivers/keyboard.h"
 #include "../incl/drivers/pci.h"
 #include "../incl/drivers/atapi.h"
+#include "../incl/fs/iso9660.h"
+
+void* nullptr = (void*)0;
 
 void kmain(){
 
+	vga_90x30_text_mode_init();
 	cls();
+	printf("90x30 Text mode\n\r");
 
 	gdt_setup();
 
@@ -53,12 +58,13 @@ void kmain(){
 	uint16_t atapi_base = atapi_detect();
 
 	if (atapi_base != 1) {
+
 		printf("ATAPI I/O port base: %X\n\r", atapi_base);
-		int status = atapi_read(0x10, 1, (uint16_t*)0x500000);
-		if (status==1) printf("atapi_read error\n\r");
-		else {
-			printf((char*)0x500000);
-		}
+
+		char* test = (char*)read_file("test.txt");
+		if (test != 0) printf(test);
+		else printf("File test.txt not found\n\r");
+
 	}
 
 	while(1);
