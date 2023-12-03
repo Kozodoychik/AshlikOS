@@ -3,11 +3,15 @@
 typedef uint32_t size_t;
 
 size_t strlen(char* str){
+
 	size_t size = 0;
+
 	while (str[size] != 0){
 		size++;
 	}
+
 	return size;
+
 }
 
 char* strcat(char* dest, char* source){
@@ -34,6 +38,7 @@ char* strcpy(char* dest, char* src){
 
 	for (size_t i=0;i<=strlen(src);i++)
 		dest[i] = src[i];
+
 	return dest;
 
 }

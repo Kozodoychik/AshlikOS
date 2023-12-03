@@ -68,9 +68,11 @@ void kmain(void* multiboot_struct, uint32_t magic){
 		printf("ATAPI I/O port base: %X\n\r", atapi_base);
 
 		char* test = (char*)read_file("test.txt");
-		if (test != 0) printf(test);
+		if (test != 0){
+			printf(test);
+			free(test);
+		}
 		else printf("File test.txt not found\n\r");
-
 	}
 
 	while(1);
