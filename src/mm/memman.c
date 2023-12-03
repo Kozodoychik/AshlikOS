@@ -1,5 +1,4 @@
 #include <mm/memman.h>
-#include <drivers/vga.h>
 
 mem_chunk* first;
 
@@ -34,7 +33,6 @@ void* malloc(size_t size){
 		temp->prev = result;
 		temp->next = result->next;
 		temp->size = result->size - size - sizeof(mem_chunk);
-		printf("Temp=%X\n\r", (uint32_t)temp);
 		if (temp->next != 0) temp->next->prev = temp;
 
 		result->next = temp;
