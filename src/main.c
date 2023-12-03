@@ -8,11 +8,12 @@
 #include <drivers/keyboard.h>
 #include <drivers/pci.h>
 #include <drivers/atapi.h>
+#include <mm/memman.h>
 #include <fs/iso9660.h>
 
 void* nullptr = (void*)0;
 
-void kmain(){
+void kmain(void* multiboot_struct, uint32_t magic){
 
 	vga_90x30_text_mode_init();
 	cls();
@@ -20,7 +21,12 @@ void kmain(){
 
 	gdt_setup();
 
-	printf("AshlikOS Kernel v.1.0\n\r");
+	printf("\nAshlikOS Kernel v.1.0\n\n\r");
+
+	uint32_t heap = 10*1024*1024;
+	uint32_t* upper_mem = (uint32_t*)(((uint32_t)multiboot_struct)+8);
+	mm_init(heap, (*upper_mem)*1024 - heap - 10*1024);
+	printf("Heap: %X\n\r", heap);
 
 	asm volatile("cli");
 	pic_init();

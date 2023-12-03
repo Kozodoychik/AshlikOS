@@ -4,6 +4,8 @@ extern kmain
 bits 32
 start:
 	mov esp,bss_end
+	push eax
+	push ebx
 	call kmain
 	cli
 	hlt

@@ -12,6 +12,7 @@ build:
 	$(CC) $(CFLAGS) -c src/main.c -o main.o
 	$(CC) $(CFLAGS) -c src/interrupts.c -o interrupts.o
 	$(CC) $(CFLAGS) -c src/gdt.c -o gdt.o
+	$(CC) $(CFLAGS) -c src/mm/memman.c -o memman.o
 	$(CC) $(CFLAGS) -c src/drivers/io.c -o io.o
 	$(CC) $(CFLAGS) -c src/drivers/vga.c -o vga.o
 	$(CC) $(CFLAGS) -c src/drivers/serial.c -o serial.o
@@ -19,7 +20,7 @@ build:
 	$(CC) $(CFLAGS) -c src/drivers/pci.c -o pci.o
 	$(CC) $(CFLAGS) -c src/drivers/atapi.c -o atapi.o
 	$(CC) $(CFLAGS) -c src/fs/iso9660.c -o iso9660.o
-	$(CC) $(LDFLAGS) header.o entry.o io.o vga.o interrupts.o isr.o loadgdt.o gdt.o serial.o keyboard.o pci.o atapi.o iso9660.o main.o
+	$(CC) $(LDFLAGS) header.o entry.o io.o vga.o interrupts.o isr.o loadgdt.o gdt.o memman.o serial.o keyboard.o pci.o atapi.o iso9660.o main.o
 run:
 	qemu-system-x86_64 -kernel kern.bin -d int -no-reboot
 run-iso:
