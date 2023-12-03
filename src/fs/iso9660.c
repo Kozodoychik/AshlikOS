@@ -1,5 +1,5 @@
-#include "../../incl/fs/iso9660.h"
-#include "../../incl/drivers/atapi.h"
+#include <fs/iso9660.h>
+#include <drivers/atapi.h>
 
 void* read_file(char* name){
 

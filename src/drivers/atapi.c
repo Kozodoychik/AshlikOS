@@ -1,6 +1,5 @@
-#include "../../incl/drivers/atapi.h"
-#include "../../incl/drivers/io.h"
-#include "../../incl/drivers/vga.h"
+#include <drivers/atapi.h>
+#include <drivers/io.h>
 
 uint16_t atapi_base = 0x1f0;
 uint16_t atapi_detect(){

@@ -1,14 +1,14 @@
 #include <stdint.h>
-#include "../incl/string.h"
-#include "../incl/interrupts.h"
-#include "../incl/gdt.h"
-#include "../incl/drivers/vga.h"
-#include "../incl/drivers/io.h"
-#include "../incl/drivers/serial.h"
-#include "../incl/drivers/keyboard.h"
-#include "../incl/drivers/pci.h"
-#include "../incl/drivers/atapi.h"
-#include "../incl/fs/iso9660.h"
+#include <string.h>
+#include <interrupts.h>
+#include <gdt.h>
+#include <drivers/vga.h>
+#include <drivers/io.h>
+#include <drivers/serial.h>
+#include <drivers/keyboard.h>
+#include <drivers/pci.h>
+#include <drivers/atapi.h>
+#include <fs/iso9660.h>
 
 void* nullptr = (void*)0;
 

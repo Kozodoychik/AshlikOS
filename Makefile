@@ -1,5 +1,5 @@
 CC=i686-linux-gnu-gcc
-CFLAGS=-ffreestanding -O2 -Wall -Wextra -nostdlib -std=gnu99
+CFLAGS=-ffreestanding -O2 -Wall -Wextra -nostdlib -std=gnu99 -Iincl
 OUTPUT=kern.bin
 LDFLAGS=-T link.ld -o $(OUTPUT) -ffreestanding -O2 -nostdlib -lgcc
 

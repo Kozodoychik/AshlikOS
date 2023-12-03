@@ -1,4 +1,4 @@
-#include "../../incl/drivers/io.h"
+#include <drivers/io.h>
 
 uint8_t inb(uint16_t port){
 

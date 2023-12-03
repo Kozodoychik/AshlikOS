@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "../types.h"
+#include <types.h>
 
 #define PCI_COMMAND 0xcf8
 #define PCI_DATA 0xcfc

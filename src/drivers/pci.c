@@ -1,7 +1,6 @@
-#include "../../incl/types.h"
-#include "../../incl/drivers/vga.h"
-#include "../../incl/drivers/pci.h"
-#include "../../incl/drivers/io.h"
+#include <types.h>
+#include <drivers/pci.h>
+#include <drivers/io.h>
 
 uint32_t get_id(uint16_t bus, uint16_t device, uint16_t function, uint32_t reg){
 
