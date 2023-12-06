@@ -111,6 +111,7 @@ void scroll(){
 			videomem[x+((y-1)*w)] = videomem[x+(y*w)];
 		}
 	}
+	for (int x=0;x<w;x++) videomem[x+((h-1)*w)].c = 0;
 
 }
 
@@ -118,6 +119,7 @@ void putchar(char c){
 	uint16_t pos = get_cursor_pos();
 	uint8_t x = (uint8_t)(pos % w);
 	uint8_t y = (uint8_t)(pos / w);
+
 	switch(c){
 		case '\n':
 			y++;
@@ -130,10 +132,12 @@ void putchar(char c){
 			videomem[get_cursor_pos()+1].attrib = attrib;
 			x++;
 	}
-	if (y == 25){
+
+	if (y >= h-1){
 		scroll();
 		y--;
 	}
+
 	set_cursor_pos(x, y);
 }
 

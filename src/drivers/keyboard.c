@@ -1,7 +1,7 @@
 #include <interrupts.h>
 #include <drivers/io.h>
 #include <drivers/keyboard.h>
-#include <drivers/vga.h>
+#include <io/printf.h>
 
 const char* scan_code_set1 = "  1234567890-=  qwertyuiop[]  asdfghjkl;'` \\zxcvbnm,./ *               789-456+1230.";
 
@@ -11,8 +11,8 @@ void __keyb_irq_handler(){
 
 	uint8_t data = inb(PS2_KEYB_DATA);
 	if (data < 0x80){
-		//if (data == 0x1c) printf("\n\r");
-		//else printf("%c", scan_code_set1[data]);
+		if (data == 0x1c) printf("\n\r");
+		else printf("%c", scan_code_set1[data]);
 	}
 	pic_eoi();
 
