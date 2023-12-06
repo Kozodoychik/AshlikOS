@@ -30,6 +30,7 @@ void* malloc(size_t size){
 
 	if (result->size >= size + sizeof(mem_chunk) + 1){
 		mem_chunk* temp = (mem_chunk*)((size_t)result + sizeof(mem_chunk) + size);
+		temp->is_allocated = false;
 		temp->prev = result;
 		temp->next = result->next;
 		temp->size = result->size - size - sizeof(mem_chunk);
@@ -48,7 +49,6 @@ void* malloc(size_t size){
 void free(void* ptr){
 
 	mem_chunk* chunk = (mem_chunk*)((uint32_t)ptr - sizeof(mem_chunk));
-
 	chunk->is_allocated = false;
 
 	if (chunk->prev != 0 && !chunk->prev->is_allocated){

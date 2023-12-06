@@ -20,7 +20,9 @@ build:
 	$(CC) $(CFLAGS) -c src/drivers/pci.c -o pci.o
 	$(CC) $(CFLAGS) -c src/drivers/atapi.c -o atapi.o
 	$(CC) $(CFLAGS) -c src/fs/iso9660.c -o iso9660.o
-	$(CC) $(LDFLAGS) header.o entry.o io.o vga.o interrupts.o isr.o loadgdt.o gdt.o memman.o serial.o keyboard.o pci.o atapi.o iso9660.o main.o
+	$(CC) $(CFLAGS) -c src/console.c -o console.o
+	$(CC) $(CFLAGS) -c src/io/printf.c -o printf.o
+	$(CC) $(LDFLAGS) header.o entry.o io.o vga.o interrupts.o isr.o loadgdt.o gdt.o memman.o serial.o keyboard.o pci.o atapi.o iso9660.o console.o printf.o main.o
 run:
 	qemu-system-x86_64 -kernel kern.bin -d int -no-reboot
 run-iso:
@@ -36,5 +38,6 @@ iso:
 	echo '	multiboot /boot/kern.bin' >> iso/boot/grub/grub.cfg
 	echo '}' >> iso/boot/grub/grub.cfg
 	echo "Sova\r" >> iso/test.txt
+	echo "AshlikOS ISO 9660 Test\r" >> iso/boot/test2.txt
 	grub-mkrescue --output os.iso iso
 	rm -rf iso

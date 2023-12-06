@@ -39,11 +39,3 @@ void serial_write(char data){
 	while(serial_transmit_empty() == 0);
 	outb(COM1_BASE, data);
 }
-
-void serial_print(char* data){
-	int i=0;
-	while (data[i] != 0) {
-		serial_write(data[i]);
-		i++;
-	}
-}

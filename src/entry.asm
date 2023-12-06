@@ -11,5 +11,5 @@ start:
 	hlt
 section .bss
 bss_start:
-resb 4096 * 4
+resb 1024 * 1024
 bss_end:

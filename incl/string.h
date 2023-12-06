@@ -42,3 +42,12 @@ char* strcpy(char* dest, char* src){
 	return dest;
 
 }
+
+int memcmp(uint8_t* first_ptr, uint8_t* second_ptr, int c){
+
+	for (int i=0;i<c;i++)
+		if (first_ptr[i] != second_ptr[i]) return first_ptr[i]-second_ptr[i];
+
+	return 0;
+
+}

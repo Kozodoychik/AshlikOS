@@ -25,5 +25,5 @@ void set_attrib(uint8_t attr);
 void set_cursor_pos(uint8_t x, uint8_t y);
 uint16_t get_cursor_pos();
 void vga_90x30_text_mode_init();
-void printf(char* str, ...);
+void putchar(char c);
 void cls();

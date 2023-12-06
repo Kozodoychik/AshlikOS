@@ -111,4 +111,7 @@ typedef struct {
 
 }__attribute__((packed)) iso9660_primary_volume_descriptor;
 
-void* read_file(char* name);
+
+char* get_name_from_path(char* path, int index);
+int get_subdirs_count(char* path);
+void* read_file(char* path);

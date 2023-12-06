@@ -7,7 +7,7 @@ idt_entry idt[256];
 idt_ptr idt_p;
 extern void isr0x00;
 void __interrupt_handler(){
-	printf("interrupt\n\r");
+	//printf("interrupt\n\r");
 	asm volatile("cli; hlt");
 	//asm volatile("iret");
 

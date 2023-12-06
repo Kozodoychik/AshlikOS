@@ -11,8 +11,8 @@ void __keyb_irq_handler(){
 
 	uint8_t data = inb(PS2_KEYB_DATA);
 	if (data < 0x80){
-		if (data == 0x1c) printf("\n\r");
-		else printf("%c", scan_code_set1[data]);
+		//if (data == 0x1c) printf("\n\r");
+		//else printf("%c", scan_code_set1[data]);
 	}
 	pic_eoi();
 

@@ -2,6 +2,7 @@
 #include <string.h>
 #include <interrupts.h>
 #include <gdt.h>
+#include <console.h>
 #include <drivers/vga.h>
 #include <drivers/io.h>
 #include <drivers/serial.h>
@@ -10,13 +11,24 @@
 #include <drivers/atapi.h>
 #include <mm/memman.h>
 #include <fs/iso9660.h>
+#include <io/printf.h>
 
 void* nullptr = (void*)0;
+
+void _ignore(){}
 
 void kmain(void* multiboot_struct, uint32_t magic){
 
 	vga_90x30_text_mode_init();
 	cls();
+
+	console_init(2);
+	console_register(_ignore, putchar);		// VGA
+	console_register(_ignore, serial_write);	// Serial
+	set_active_console(0);
+
+	serial_init();
+
 	printf("90x30 Text mode\n\r");
 
 	gdt_setup();
@@ -40,12 +52,6 @@ void kmain(void* multiboot_struct, uint32_t magic){
 
 	asm volatile("sti");
 
-
-	printf("Initializing serial...");
-
-	serial_init();
-	serial_print("AshlikOS Kernel v.1.0 COM1\n\r");
-
 	printf("OK\n\r");
 
 	for (int bus=0;bus<8;bus++){
@@ -67,7 +73,7 @@ void kmain(void* multiboot_struct, uint32_t magic){
 
 		printf("ATAPI I/O port base: %X\n\r", atapi_base);
 
-		char* test = (char*)read_file("test.txt");
+		char* test = (char*)read_file("/boot/grub/grub.cfg");
 		if (test != 0){
 			printf(test);
 			free(test);
