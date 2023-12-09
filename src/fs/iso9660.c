@@ -1,6 +1,5 @@
 #include <fs/iso9660.h>
 #include <drivers/atapi.h>
-#include <drivers/vga.h>
 #include <mm/memman.h>
 
 
@@ -59,7 +58,7 @@ int get_subdirs_count(char* path){
 
 void* read_file(char* path){
 
-	uint16_t* pvd_ptr = (uint16_t*)malloc(2050);
+	uint16_t* pvd_ptr = (uint16_t*)malloc(2049);
 	int status = atapi_read(0x10, 1, pvd_ptr);
 
         if (status==1) return 0;
@@ -68,7 +67,7 @@ void* read_file(char* path){
 		iso9660_primary_volume_descriptor* pvd = (iso9660_primary_volume_descriptor*)pvd_ptr;
 
 		uint32_t lba = pvd->root_directory_entry.lba_lsb;
-		uint16_t* root_entry_ptr = (uint16_t*)malloc(pvd->root_directory_entry.length);
+		uint16_t* root_entry_ptr = (uint16_t*)malloc(((pvd->root_directory_entry.length/2048)+1)*2048);
 		status = atapi_read(lba, (pvd->root_directory_entry.length/2048)+1, (uint16_t*)root_entry_ptr);
 
 		free(pvd_ptr);
@@ -77,7 +76,7 @@ void* read_file(char* path){
 		else {
 
 			iso9660_directory_entry* directory = (iso9660_directory_entry*)root_entry_ptr;
-			free(root_entry_ptr);
+
 			for (int i=0;i<=get_subdirs_count(path);i++){
 				bool is_file = false;
 
@@ -98,7 +97,9 @@ void* read_file(char* path){
 				uint32_t size = file->data_length_lsb;
 
 				free(directory);
-				directory = (iso9660_directory_entry*)malloc(size);
+				directory = (iso9660_directory_entry*)malloc(((size/2048)+1)*2048); // zhe
+
+				if (directory==0) return 0;
 
 				status = atapi_read(lba, (size/2048)+1, (uint16_t*)directory);
 

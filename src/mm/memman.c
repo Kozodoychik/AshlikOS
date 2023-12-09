@@ -18,17 +18,14 @@ void mm_init(uint32_t start, uint32_t size){
 }
 
 void* malloc(size_t size){
-
 	mem_chunk* result = 0;
 
 	for (mem_chunk* chunk = first;chunk!=0 && result==0;chunk=chunk->next){
-		if (chunk->size > size && !chunk->is_allocated)
-			result = chunk;
+		if (chunk->size > size && !chunk->is_allocated) result = chunk;
 	}
-
 	if (result==0) return 0;
 
-	if (result->size >= size + sizeof(mem_chunk) + 1){
+	if (result->size >= size + sizeof(mem_chunk) + 4){
 		mem_chunk* temp = (mem_chunk*)((size_t)result + sizeof(mem_chunk) + size);
 		temp->is_allocated = false;
 		temp->prev = result;

@@ -7,7 +7,7 @@ int console_count = 0;
 
 void console_init(int count){
 
-	consoles = (console_device*)malloc(count * sizeof(console_device));
+	consoles = (console_device*)malloc((count * sizeof(console_device))+8);
 
 }
 

@@ -10,6 +10,7 @@
 #include <drivers/pci.h>
 #include <drivers/atapi.h>
 #include <mm/memman.h>
+#include <fonts/psf.h>
 #include <fs/iso9660.h>
 #include <io/printf.h>
 
@@ -19,40 +20,51 @@ void _ignore(){}
 
 void kmain(void* multiboot_struct, uint32_t magic){
 
-	vga_90x30_text_mode_init();
-	cls();
-
-	console_init(2);
-	console_register(_ignore, putchar);		// VGA
-	console_register(_ignore, serial_write);	// Serial
-	set_active_console(0);
-
-	serial_init();
-
-	printf("90x30 Text mode\n\r");
-
-	gdt_setup();
-
-	printf("\nAshlikOS Kernel v.1.0\n\n\r");
+	uint32_t* framebuffer_addr = (uint32_t*)(((uint32_t)multiboot_struct)+88);
+	uint8_t* depth = (uint8_t*)(((uint32_t)multiboot_struct)+88);
 
 	uint32_t heap = 10*1024*1024;
 	uint32_t* upper_mem = (uint32_t*)(((uint32_t)multiboot_struct)+8);
 	mm_init(heap, (*upper_mem)*1024 - heap - 10*1024);
-	printf("Heap: %X\n\r", heap);
+
+	console_init(2);
+	console_register(_ignore, vga_putchar);		// VGA
+	console_register(_ignore, serial_write);	// Serial
+	set_active_console(1);
+
+	serial_init();
+
+	gdt_setup();
+
+	vga_init(*framebuffer_addr, 640, 480, 4);
 
 	asm volatile("cli");
 	pic_init();
 	idt_setup();
 
-	printf("Initializing keyboard...");
-
 	keyboard_init();
 
-	printf("OK\n\r");
-
 	asm volatile("sti");
+	
+	uint16_t atapi_base = atapi_detect();
 
-	printf("OK\n\r");
+	if (atapi_base != 1) {
+
+
+		uint8_t* font = (uint8_t*)read_file("/font.psf");
+		if (font != 0){
+			uint8_t* data = (uint8_t*)psf_load(font);
+			vga_load_font(data, 8, psf_get_glyph_height(), psf_get_bytes_per_glyph());
+		}
+		else printf("File font.psf not found\n\r");
+		set_active_console(0);
+		printf("sychonok\n\r");
+		printf("AshlikOS VESA + PSF font test\n\r");
+	}
+
+	printf("\nAshlikOS Kernel v.1.0\n\n\r");
+	printf("Heap: %X\n\r", heap);
+	printf("ATAPI I/O port base: %X\n\r", atapi_base);
 
 	for (int bus=0;bus<8;bus++){
 		for (int device=0;device<32;device++){
@@ -66,21 +78,6 @@ void kmain(void* multiboot_struct, uint32_t magic){
 			}
 		}
 	}
-
-	uint16_t atapi_base = atapi_detect();
-
-	if (atapi_base != 1) {
-
-		printf("ATAPI I/O port base: %X\n\r", atapi_base);
-
-		char* test = (char*)read_file("/boot/grub/grub.cfg");
-		if (test != 0){
-			printf(test);
-			free(test);
-		}
-		else printf("File test.txt not found\n\r");
-	}
-
 	while(1);
 
 	return;
