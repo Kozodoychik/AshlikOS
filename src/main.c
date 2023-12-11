@@ -45,7 +45,7 @@ void kmain(void* multiboot_struct, uint32_t magic){
 	keyboard_init();
 
 	asm volatile("sti");
-	
+
 	uint16_t atapi_base = atapi_detect();
 
 	if (atapi_base != 1) {
@@ -56,15 +56,18 @@ void kmain(void* multiboot_struct, uint32_t magic){
 			uint8_t* data = (uint8_t*)psf_load(font);
 			vga_load_font(data, 8, psf_get_glyph_height(), psf_get_bytes_per_glyph());
 		}
-		else printf("File font.psf not found\n\r");
+		else{
+			printf("Cannot load file font.psf\n\r");
+			return;
+		}
 		set_active_console(0);
-		printf("sychonok\n\r");
-		printf("AshlikOS VESA + PSF font test\n\r");
 	}
 
 	printf("\nAshlikOS Kernel v.1.0\n\n\r");
 	printf("Heap: %X\n\r", heap);
-	printf("ATAPI I/O port base: %X\n\r", atapi_base);
+	if (atapi_base != 1){
+		printf("ATAPI I/O port base: %X\n\r", atapi_base);
+	}
 
 	for (int bus=0;bus<8;bus++){
 		for (int device=0;device<32;device++){
@@ -78,6 +81,7 @@ void kmain(void* multiboot_struct, uint32_t magic){
 			}
 		}
 	}
+	wprintf(L"ÆÎÏÀ\n\r");
 	while(1);
 
 	return;

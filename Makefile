@@ -1,5 +1,5 @@
 CC=i686-linux-gnu-gcc
-CFLAGS=-ffreestanding -O2 -Wall -Wextra -nostdlib -std=gnu99 -Iincl -Wno-discarded-qualifiers -Wno-unused-parameter
+CFLAGS=-ffreestanding -O2 -Wall -Wextra -nostdlib -std=gnu99 -Iincl -finput-charset=cp1251 -fexec-charset=utf-8 -Wno-discarded-qualifiers -Wno-unused-parameter
 OUTPUT=kern.bin
 LDFLAGS=-T link.ld -o $(OUTPUT) -ffreestanding -O2 -nostdlib -lgcc
 
@@ -23,6 +23,9 @@ build:
 	$(CC) $(CFLAGS) -c src/console.c -o console.o
 	$(CC) $(CFLAGS) -c src/io/printf.c -o printf.o
 	$(CC) $(CFLAGS) -c src/fonts/psf.c -o psf.o
+
+	#i686-linux-gnu-objcopy -O elf32-i386 -B i386 -I binary font.psf font.o
+
 	$(CC) $(LDFLAGS) header.o entry.o io.o vga.o interrupts.o isr.o loadgdt.o gdt.o memman.o serial.o keyboard.o pci.o atapi.o iso9660.o console.o printf.o psf.o main.o
 run:
 	qemu-system-x86_64 -kernel kern.bin -d int -no-reboot
@@ -40,7 +43,6 @@ iso:
 	echo '}' >> iso/boot/grub/grub.cfg
 	echo "Sova\r" >> iso/test.txt
 	echo "AshlikOS ISO 9660 Test\r" >> iso/boot/test2.txt
-	cp test.bin iso/test.bin
 	cp font.psf iso/font.psf
 	grub-mkrescue --output os.iso iso
 	rm -rf iso

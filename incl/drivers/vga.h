@@ -31,5 +31,5 @@ void write_90x30_text_mode();
 uint16_t get_cursor_pos();
 void vga_90x30_text_mode_init();
 void vga_putpixel(uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b);
-void vga_putchar(char c);
+void vga_putchar(wchar_t c);
 void cls();

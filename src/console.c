@@ -27,3 +27,7 @@ void set_active_console(int index){
 console_device* get_active_console(){
 	return active_console;
 }
+
+console_device* get_console(int id){
+	return &consoles[id];
+}

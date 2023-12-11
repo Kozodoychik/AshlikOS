@@ -1,5 +1,7 @@
 #include <drivers/vga.h>
 #include <drivers/io.h>
+#include <fonts/psf.h>
+#include <types.h>
 
 struct vga_char* txt_videomem = (struct vga_char*)0xb8000;
 uint8_t* framebuffer;
@@ -149,11 +151,11 @@ void scroll(){
 			for (uint32_t x=0;x<w;x++){
 				uint32_t offset1 = ((y-font_h)*(w*bpp)) + x*bpp;
 				uint32_t offset2 = (y*(w*bpp)) + x*bpp;
-				
+
 				framebuffer[offset1] = framebuffer[offset2];
 				framebuffer[offset1+1] = framebuffer[offset2+1];
 				framebuffer[offset1+2] = framebuffer[offset2+2];
-				
+
 				framebuffer[offset2] = 0;
 				framebuffer[offset2+1] = 0;
 				framebuffer[offset2+2] = 0;
@@ -173,7 +175,7 @@ void vga_putpixel(uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b){
 
 }
 
-void vga_putchar(char c){
+void vga_putchar(wchar_t c){
 
 	if (!graphics){
 		uint16_t pos = get_cursor_pos();
@@ -217,6 +219,8 @@ void vga_putchar(char c){
 				cursor_x = 0;
 				break;
 			default:
+				uint16_t* unicode = psf_get_unicode_translation_table();
+				if (unicode) c = unicode[c];
 				uint8_t* ch = (uint8_t*)((uint32_t)font+(c*bytes_per_glyph));
 				for (int y=0;y<font_h;y++){
 					uint8_t line = ch[y];

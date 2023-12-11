@@ -1,4 +1,6 @@
 #include <stdint.h>
+#include <stdbool.h>
+#include <limits.h>
 
 typedef struct {
 	uint16_t magic;
@@ -21,3 +23,4 @@ void* psf_load(uint8_t* data);
 uint8_t psf_get_glyph_width();
 uint8_t psf_get_glyph_height();
 uint32_t psf_get_bytes_per_glyph();
+uint16_t* psf_get_unicode_translation_table();
